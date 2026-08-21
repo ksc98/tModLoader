@@ -6789,11 +6789,17 @@
  			_isDrawingOrUpdating = false;
  		}
  	}
-@@ -54715,7 +_,7 @@
+@@ -54715,7 +_,13 @@
  			while (true) {
  				long num = presentTimestamp;
  				presentTimestamp = Stopwatch.GetTimestamp();
++				/*
  				UpdateTimeAccumulator += Utils.SWTicksToTimeSpan(presentTimestamp - num).TotalSeconds;
++				*/
++				// TML: On Linux, Stopwatch.Frequency is 1ns, and SWTicksToTimeSpan truncates to whole TimeSpan
++				// ticks (100ns), so every sub-100ns spin iteration accumulated 0 and this loop took ~100x too
++				// long to reach one frame, capping the game at ~1 fps. Accumulate the delta in seconds directly.
++				UpdateTimeAccumulator += (double)(presentTimestamp - num) / Stopwatch.Frequency;
  				if (UpdateTimeAccumulator >= TARGET_FRAME_TIME * 599.0 / 600.0)
  					break;
  
