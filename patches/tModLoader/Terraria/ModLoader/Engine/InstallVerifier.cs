@@ -20,7 +20,7 @@ public enum DistributionPlatform
 internal static class InstallVerifier
 {
 	private static string VanillaExe = "Terraria.exe";
-	private const string TerrariaVersion = "1.4.5.6";
+	private const string TerrariaVersion = "1.4.5.7";
 	private static string CheckExe = $"Terraria_v{TerrariaVersion}.exe"; // This should match the hashes. {Main.versionNumber}
 	internal static string vanillaExePath; // Only reliable for GOG installs
 
@@ -49,7 +49,7 @@ internal static class InstallVerifier
 
 			vanillaSteamAPI = "steam_api.dll";
 			gogHash = ToByteArray("18013fe58e2b64be3ed0d7b7161c6800"); // Don't forget to update CheckExe above
-			steamHash = ToByteArray("1ea72236140aafb8737e5664557266c3");
+			steamHash = ToByteArray("25aab895d26cd4690e3130faf426c85f");
 		}
 		else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX)) {
 			portableRid = $"osx";
@@ -70,7 +70,7 @@ internal static class InstallVerifier
 			steamAPIHash = ToByteArray("4b7a8cabaa354fcd25743aabfb4b1366");
 			vanillaSteamAPI = "libsteam_api.so";
 			gogHash = ToByteArray("0dbf043f8b07e128e124358ff1e32858");
-			steamHash = ToByteArray("15c5b36710fa6d5d911c474e60022df2");
+			steamHash = ToByteArray("23377672abcd844bfb5374ac4224e01a");
 		}
 		else {
 			ErrorReporting.FatalExit(Language.GetTextValue("tModLoader.UnknownVerificationOS"));
