@@ -67,35 +67,24 @@
  	public override void OnTagAppliedToNPC(Player player, NPC npc)
  	{
  		if (player == Main.LocalPlayer)
-@@ -45,15 +_,42 @@
- 			player.AddBuff(PlayerBuffId, PlayerBuffTime);
+@@ -47,6 +_,15 @@
+ 		}
  	}
  
-+	/*
- 	public override void ModifyTaggedHit(Player owner, Projectile optionalProjectile, NPC npcHit, ref int damageDealt, ref bool crit)
-+	*/
 +	/// <summary>
 +	/// Allows the damage dealt to be modified when a tagged enemy takes damage from a minion, sentry, or one of their projectiles.
 +	/// <br/> This automatically handles the <see cref="TagDamage"/> and <see cref="CritChance"/> fields.
-+	/// <para> Make sure to add <c>base.ModifyTaggedHit(owner, optionalProjectile, npcHit, ref damageDealt, ref crit);</c> in order for those calculations to take place.</para>
++	/// <para> Make sure to add <c>base.ModifyTaggedHit(owner, optionalProjectile, npcHit, ref changes);</c> in order for those calculations to take place.</para>
 +	/// </summary>
 +	/// <param name="owner">The player who inflicted the tag effect.</param>
 +	/// <param name="optionalProjectile">The projectile that hit the NPC.</param>
 +	/// <param name="npcHit">The NPC who was hit.</param>
-+	/// <param name="modifiers">The original damage that was dealt to the NPC.</param>
-+	public override void ModifyTaggedHit(Player owner, Projectile optionalProjectile, NPC npcHit, ref NPC.HitModifiers modifiers)
++	/// <param name="changes">The tag damage changes accumulated so far for this hit.</param>
+ 	public override void ModifyTaggedHit(Player owner, Projectile optionalProjectile, NPC npcHit, ref TagDamageChanges changes)
  	{
- 		if (optionalProjectile != null)
-+			/*
- 			damageDealt += (int)((float)(TagDamage + optionalProjectile.bonusTagDamage) * ProjectileID.Sets.SummonTagDamageMultiplier[optionalProjectile.type]);
-+			*/
-+			modifiers.FlatBonusDamage += (TagDamage + optionalProjectile.bonusTagDamage) * ProjectileID.Sets.SummonTagDamageMultiplier[optionalProjectile.type];
- 
- 		if (Main.rand.Next(100) < CritChance)
-+			/*
- 			crit = true;
-+			*/
-+			modifiers.SetCrit();
+ 		changes.AddProjectileTagDamage = true;
+@@ -58,6 +_,15 @@
+ 			changes.Crit = true;
  	}
  
 +	/// <summary>

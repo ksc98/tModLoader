@@ -142,7 +142,7 @@ namespace ExampleMod.Content.Projectiles
 			if (Projectile.owner == Main.myPlayer && !Projectile.noDropItem) {
 				int dropItemType = ModContent.ItemType<Items.ExamplePaperAirplane>(); // This the item we want the paper airplane to drop.
 				int newItem = Item.NewItem(Projectile.GetSource_DropAsItem(), Projectile.Hitbox, dropItemType); // Create a new item in the world.
-				Main.item[newItem].noGrabDelay = 0; // Set the new item to be able to be picked up instantly
+				Main.item[newItem].grabDelayTime = 0; // Set the new item to be able to be picked up instantly
 
 				// Here we need to make sure the item is synced in multiplayer games.
 				if (Main.netMode == NetmodeID.MultiplayerClient && newItem >= 0) {

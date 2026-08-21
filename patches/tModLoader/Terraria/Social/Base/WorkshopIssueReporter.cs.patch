@@ -1,6 +1,20 @@
 --- src/TerrariaNetCore/Terraria/Social/Base/WorkshopIssueReporter.cs
 +++ src/tModLoader/Terraria/Social/Base/WorkshopIssueReporter.cs
-@@ -39,12 +_,23 @@
+@@ -36,9 +_,26 @@
+ 			this.OnNeedToNotifyUI();
+ 	}
+ 
++	// TML: 1.4.5.7 dropped this vanilla overload, but tModLoader's publish checks report already-formatted text.
++	public void ReportInstantUploadProblemFromValue(string textValue)
++	{
++		Utils.LogAndConsoleErrorMessage(textValue);
++		if (Main.dedServ)
++			throw new NotImplementedException(textValue);
++
++		AddReport(textValue);
++		OpenReportsScreen();
++	}
++
  	public void ReportInstantUploadProblem(string textKey)
  	{
  		string textValue = Language.GetTextValue(textKey);
@@ -13,18 +27,20 @@
  		AddReport(textValue);
  		OpenReportsScreen();
  	}
- 
- 	public void ReportInstantUploadProblemFromValue(string text)
+@@ -46,6 +_,12 @@
+ 	public void ReportInstantUploadProblem(string textKey, object subs)
  	{
-+		// Logging and dedServ check added by TML.
-+		Utils.LogAndConsoleErrorMessage(text);
-+		if (Main.dedServ)
-+			throw new NotImplementedException(text);
+ 		string textValueWith = Language.GetTextValueWith(textKey, subs);
 +
- 		AddReport(text);
++		// Logging and dedServ check added by TML.
++		Utils.LogAndConsoleErrorMessage(textValueWith);
++		if (Main.dedServ)
++			throw new NotImplementedException(textValueWith);
++
+ 		AddReport(textValueWith);
  		OpenReportsScreen();
  	}
-@@ -52,6 +_,12 @@
+@@ -53,6 +_,12 @@
  	public void ReportDelayedUploadProblem(string textKey)
  	{
  		string textValue = Language.GetTextValue(textKey);
@@ -37,10 +53,10 @@
  		AddReport(textValue);
  		NotifyReportsScreen();
  	}
-@@ -63,6 +_,12 @@
- 		};
- 
- 		string textValueWith = Language.GetTextValueWith(textKey, obj);
+@@ -60,6 +_,12 @@
+ 	public void ReportDelayedUploadProblem(string textKey, object subs)
+ 	{
+ 		string textValueWith = Language.GetTextValueWith(textKey, subs);
 +
 +		// Logging and dedServ check added by TML.
 +		Utils.LogAndConsoleErrorMessage(textValueWith);
@@ -50,7 +66,7 @@
  		AddReport(textValueWith);
  		NotifyReportsScreen();
  	}
-@@ -75,6 +_,12 @@
+@@ -72,6 +_,12 @@
  		};
  
  		string textValueWith = Language.GetTextValueWith(textKey, obj);
@@ -63,7 +79,7 @@
  		AddReport(textValueWith);
  		NotifyReportsScreen();
  	}
-@@ -86,6 +_,12 @@
+@@ -83,6 +_,12 @@
  		};
  
  		string textValueWith = Language.GetTextValueWith(textKey, obj);

@@ -463,6 +463,19 @@ partial class SoundID
 	public static readonly SoundStyle Item197 = ItemSound(197);
 	public static readonly SoundStyle Item198 = ItemSound(198);
 	public static readonly SoundStyle Item199 = ItemSound(199);
+
+	// TML: named item sounds added in 1.4.5.7. Volumes converted from WithVolumePerceived(x) => x ^ 1.6609.
+	public static readonly SoundStyle MysticBloom = ItemSound(60) with { Volume = 0.489f };
+	public static readonly SoundStyle GlacierFang_Muzzle = ItemSound(201);
+	public static readonly SoundStyle Unused = ItemSound(202);
+	public static readonly SoundStyle ArcSurge = ItemSound(203) with { Volume = 0.218f };
+	public static readonly SoundStyle LightningStrikeHit = ItemSound(204);
+	public static readonly SoundStyle StackableItem8ForRubyStaff = ItemSound(205);
+	public static readonly SoundStyle PyroclasticStone = ItemSound(206);
+	public static readonly SoundStyle ArmletOfRuin = ItemSound(207);
+	public static readonly SoundStyle Unused2 = ItemSound(208);
+	public static readonly SoundStyle Unused3 = ItemSound(209);
+	public static readonly SoundStyle GlacierFang_Charging = ItemSound(210);
 	// ZombieX sound styles are new, and weren't present in vanilla neither as int nor SoundStyle fields. 
 	public static readonly SoundStyle Zombie1 = ZombieSound(1);
 	public static readonly SoundStyle Zombie2 = ZombieSound(2);

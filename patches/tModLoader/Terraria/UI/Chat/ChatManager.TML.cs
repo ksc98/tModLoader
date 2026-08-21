@@ -11,8 +11,9 @@ public static partial class ChatManager
 	// Fix all instances of drawing text to use TextSnippets instead of strings (#FixNPCChat)
 	public static void DrawColorCodedStringWithShadow(SpriteBatch spriteBatch, DynamicSpriteFont font, TextSnippet[] snippets, Vector2 position, Color color, Color shadowColor, float rotation, Vector2 origin, Vector2 baseScale, out int hoveredSnippet, float maxWidth = -1f, float spread = 2f)
 	{
-		DrawColorCodedStringShadow(spriteBatch, font, snippets, position, shadowColor, rotation, origin, baseScale, maxWidth, spread);
-		DrawColorCodedString(spriteBatch, font, snippets, position, color, rotation, origin, baseScale, out hoveredSnippet, maxWidth);
+		List<PositionedSnippet> snippets2 = LayoutSnippets(font, snippets, baseScale, maxWidth).ToList();
+		DrawColorCodedStringShadow(spriteBatch, font, snippets2, position, shadowColor, rotation, origin, baseScale, spread);
+		DrawColorCodedString(spriteBatch, font, snippets2, position, rotation, origin, baseScale, out hoveredSnippet, color);
 	}
 
 	// Overload with shadowColor param

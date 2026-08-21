@@ -1,7 +1,10 @@
 --- src/TerrariaNetCore/Terraria/GameContent/UI/EmoteBubble.cs
 +++ src/tModLoader/Terraria/GameContent/UI/EmoteBubble.cs
-@@ -4,22 +_,26 @@
+@@ -2,24 +_,29 @@
+ using System.Collections.Generic;
+ using Microsoft.Xna.Framework;
  using Microsoft.Xna.Framework.Graphics;
++using Terraria.DataStructures;
  using Terraria.GameContent.Events;
  using Terraria.ID;
 +using Terraria.ModLoader;
@@ -47,7 +50,7 @@
 +			// tl;dr: byte type -> ushort packedOwnerType [owner << 8 | type] (only if it's a projectile)
 +			int whoAmI = anch.entity.whoAmI;
 +			if (anch.entity is Projectile projectile) {
-+				whoAmI = projectile.identity; // This is the meta parameter in DeserializeNetAnchor
++				whoAmI = projectile.key; // This is the meta parameter in DeserializeNetAnchor
 +				item = projectile.owner << 8 | item;
 +			}
 +
@@ -56,7 +59,7 @@
  		}
  
  		return Tuple.Create(0, 0);
-@@ -73,13 +_,31 @@
+@@ -73,13 +_,23 @@
  
  	public static WorldUIAnchor DeserializeNetAnchor(int type, int meta)
  	{
@@ -71,21 +74,13 @@
  			case 1:
  				return new WorldUIAnchor(Main.player[meta]);
  			case 2:
-+				// meta represents the identity here
-+				int owner = packedOwnerType >> 8;
-+
-+				// identity matching code taken from MessageBuffer.GetData case 27
-+				int whoAmI = Main.maxProjectiles;
-+				for (int i = 0; i < Main.maxProjectiles; i++) {
-+					Projectile projectile = Main.projectile[i];
-+					if (projectile.owner == owner && projectile.identity == meta && projectile.active) {
-+						whoAmI = i;
-+						break;
-+					}
-+				}
++				// meta is a packed Projectile.key, which matches the same projectile on every client.
++				// The owner is still packed into the type byte for wire compatibility, but the key already contains it.
++				if (((ProjectileKey)meta).TryGetActive(out Projectile projectile))
++					return new WorldUIAnchor(projectile);
 +
 -				return new WorldUIAnchor(Main.projectile[meta]);
-+				return new WorldUIAnchor(Main.projectile[whoAmI]);
++				return new WorldUIAnchor(Main.projectile[Main.maxProjectiles]);
  			default:
  				throw new Exception("How did you end up getting this?");
  		}

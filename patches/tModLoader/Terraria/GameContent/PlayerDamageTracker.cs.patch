@@ -1,0 +1,26 @@
+--- src/TerrariaNetCore/Terraria/GameContent/PlayerDamageTracker.cs
++++ src/tModLoader/Terraria/GameContent/PlayerDamageTracker.cs
+@@ -77,11 +_,23 @@
+ 				return ((Player)entity).name;
+ 		}
+ 
++		/*
+ 		if (source.SourceOtherIndex.HasValue)
+ 			return "Other (" + source.SourceOtherIndex + ")";
+ 
+ 		if (source.CustomReason != null)
+ 			return source.CustomReason;
++		*/
++		if (source.SourceOtherIndex >= 0)
++			return "Other (" + source.SourceOtherIndex + ")";
++
++		if (source.CustomReason != null)
++			return source.CustomReason.ToString();
++
++#pragma warning disable CS0618 // string reasons from the obsolete ByCustomReason(string) overload
++		if (source.SourceCustomReason != null)
++			return source.SourceCustomReason;
++#pragma warning restore CS0618
+ 
+ 		return "Unknown";
+ 	}

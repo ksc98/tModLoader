@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/ID/CloudID.cs
++++ src/tModLoader/Terraria/ID/CloudID.cs
+@@ -6,7 +_,7 @@
+ {
+ 	public static class Sets
+ 	{
+-		public static SetFactory Factory = new SetFactory(Count);
++		public static SetFactory Factory = new SetFactory(Count, nameof(CloudID));
+ 		public static List<int> RareClouds_Normal = new List<int> {
+ 			22,
+ 			23,

@@ -209,64 +209,69 @@ public partial class Item : TagSerializable, IEntityWithGlobals<GlobalItem>
 	}
 
 	/// <summary>
-	/// <inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/>
-	/// <br/><br/>This particular overload uses a Rectangle instead of X, Y, Width, and Height to determine the actual spawn position.
+	/// <inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/>
+	/// <br/><br/>This particular overload uses a Rectangle to determine the actual spawn position. The item is spawned centered within the rectangle.
 	/// </summary>
-	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/></returns>
-	public static int NewItem(IEntitySource source, Rectangle rectangle, int Type, int Stack = 1, bool noBroadcast = false, int prefixGiven = 0, bool noGrabDelay = false)
-		=> NewItem(source, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, Type, Stack, noBroadcast, prefixGiven, noGrabDelay);
+	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/></returns>
+	public static int NewItem(IEntitySource source, Rectangle rectangle, int Type, int Stack = 1, bool noBroadcast = false, int prefixGiven = 0, NewItemOwnership ownership = NewItemOwnership.None, Vector2? velocity = null, NewItemModifier modifier = null)
+		=> NewItem(source, new Vector2(rectangle.X + rectangle.Width / 2, rectangle.Y + rectangle.Height / 2), Type, Stack, prefixGiven, ownership, velocity, modifier, noBroadcast);
 
 	/// <summary>
-	/// <inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/>
-	/// <br/><br/>This particular overload uses a Vector2 instead of X, Y, Width, and Height to determine the actual spawn position.
-	/// </summary>
-	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/></returns>
-	public static int NewItem(IEntitySource source, Vector2 position, int Type, int Stack = 1, bool noBroadcast = false, int prefixGiven = 0, bool noGrabDelay = false)
-		=> NewItem(source, (int)position.X, (int)position.Y, 0, 0, Type, Stack, noBroadcast, prefixGiven, noGrabDelay);
-
-	/// <summary>
-	/// <inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/>
+	/// <inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/>
 	/// <br/><br/>This particular overload uses an Item instead of just the item type. All modded data will be preserved.
+	/// <br/><br/>The X, Y, Width, and Height parameters dictate a rectangle, the item will be spawned centered within that rectangle.
 	/// </summary>
-	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/></returns>
-	public static int NewItem(IEntitySource source, int X, int Y, int Width, int Height, Item item, bool noBroadcast = false, bool noGrabDelay = false)
-		=> Item.NewItem_Inner(source, X, Y, Width, Height, item, item.type, item.stack, noBroadcast, item.prefix, noGrabDelay);
+	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/></returns>
+	public static int NewItem(IEntitySource source, int X, int Y, int Width, int Height, Item item, bool noBroadcast = false, NewItemOwnership ownership = NewItemOwnership.None, Vector2? velocity = null, NewItemModifier modifier = null)
+		=> Item.NewItem_Inner(source, new Vector2(X + Width / 2, Y + Height / 2), item, item.type, item.stack, item.prefix, ownership, velocity, modifier, noBroadcast);
 
 	/// <summary>
-	/// <inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/>
+	/// <inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/>
 	/// <br/><br/>This particular overload uses an Item instead of just the item type. All modded data will be preserved.
-	/// <br/><br/>This particular overload uses a Vector2 instead of X and Y to determine the actual spawn position.
+	/// <br/><br/>This particular overload uses two Vector2 (position and size) to determine the actual spawn position.
 	/// </summary>
-	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/></returns>
-	public static int NewItem(IEntitySource source, Vector2 pos, Vector2 randomBox, Item item, bool noBroadcast = false, bool noGrabDelay = false)
-		=> NewItem(source, (int)pos.X, (int)pos.Y, (int)randomBox.X, (int)randomBox.Y, item, noBroadcast, noGrabDelay);
+	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/></returns>
+	public static int NewItem(IEntitySource source, Vector2 pos, Vector2 randomBox, Item item, bool noBroadcast = false, NewItemOwnership ownership = NewItemOwnership.None, Vector2? velocity = null, NewItemModifier modifier = null)
+		=> NewItem(source, (int)pos.X, (int)pos.Y, (int)randomBox.X, (int)randomBox.Y, item, noBroadcast, ownership, velocity, modifier);
 
 	/// <summary>
-	/// <inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/>
+	/// <inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/>
 	/// <br/><br/>This particular overload uses an Item instead of just the item type. All modded data will be preserved.
 	/// <br/><br/>This particular overload uses a Vector2 instead of X and Y to determine the actual spawn position.
 	/// </summary>
-	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/></returns>
-	public static int NewItem(IEntitySource source, Vector2 pos, int Width, int Height, Item item, bool noBroadcast = false, bool noGrabDelay = false)
-		=> NewItem(source, (int)pos.X, (int)pos.Y, Width, Height, item, noBroadcast, noGrabDelay);
+	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/></returns>
+	public static int NewItem(IEntitySource source, Vector2 pos, int Width, int Height, Item item, bool noBroadcast = false, NewItemOwnership ownership = NewItemOwnership.None, Vector2? velocity = null, NewItemModifier modifier = null)
+		=> NewItem(source, (int)pos.X, (int)pos.Y, Width, Height, item, noBroadcast, ownership, velocity, modifier);
 
 	/// <summary>
-	/// <inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/>
+	/// <inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/>
 	/// <br/><br/>This particular overload uses an Item instead of just the item type. All modded data will be preserved.
-	/// <br/><br/>This particular overload uses a Vector2 instead of X, Y, Width, and Height to determine the actual spawn position.
+	/// <br/><br/>This particular overload uses a Vector2 as the center of the spawned item.
 	/// </summary>
-	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/></returns>
-	public static int NewItem(IEntitySource source, Vector2 position, Item item, bool noBroadcast = false, bool noGrabDelay = false)
-		=> NewItem(source, (int)position.X, (int)position.Y, 0, 0, item, noBroadcast, noGrabDelay);
+	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/></returns>
+	public static int NewItem(IEntitySource source, Vector2 position, Item item, bool noBroadcast = false, NewItemOwnership ownership = NewItemOwnership.None, Vector2? velocity = null, NewItemModifier modifier = null)
+		=> Item.NewItem_Inner(source, position, item, item.type, item.stack, item.prefix, ownership, velocity, modifier, noBroadcast);
 
 	/// <summary>
-	/// <inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/>
+	/// <inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/>
 	/// <br/><br/>This particular overload uses an Item instead of just the item type. All modded data will be preserved.
-	/// <br/><br/>This particular overload uses a Rectangle instead of X, Y, Width, and Height to determine the actual spawn position.
+	/// <br/><br/>This particular overload uses a Rectangle to determine the actual spawn position. The item is spawned centered within the rectangle.
 	/// </summary>
-	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, int, int, int, int, int, int, bool, int, bool)"/></returns>
-	public static int NewItem(IEntitySource source, Rectangle rectangle, Item item, bool noBroadcast = false, bool noGrabDelay = false)
-		=> NewItem(source, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, item, noBroadcast, noGrabDelay);
+	/// <returns><inheritdoc cref="Item.NewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier, bool)"/></returns>
+	public static int NewItem(IEntitySource source, Rectangle rectangle, Item item, bool noBroadcast = false, NewItemOwnership ownership = NewItemOwnership.None, Vector2? velocity = null, NewItemModifier modifier = null)
+		=> NewItem(source, rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height, item, noBroadcast, ownership, velocity, modifier);
+
+	/// <summary>
+	/// Item-instance variant of <see cref="RequestNewItem(IEntitySource, Vector2, int, int, int, NewItemOwnership, Vector2?, NewItemModifier)"/>; all modded data is preserved. Returns the index of the item within <see cref="Main.item"/>.
+	/// </summary>
+	public static int RequestNewItem(IEntitySource source, Vector2 center, Item item, NewItemOwnership ownership = NewItemOwnership.None, Vector2? velocity = null, NewItemModifier modifier = null)
+	{
+		int number = NewItem_Inner(source, center, item, item.type, item.stack, item.prefix, ownership, velocity, modifier, noBroadcast: false);
+		if (Main.netMode == 1)
+			NetMessage.SendData(21, -1, -1, null, number, (float)ownership);
+
+		return number;
+	}
 
 	private void ApplyItemAnimationCompensationsToVanillaItems()
 	{

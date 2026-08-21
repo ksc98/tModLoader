@@ -80,11 +80,8 @@ public static class ProjectileLoader
 			Lang._projectileNameCache[k] = LocalizedText.Empty;
 		}
 
-		Array.Resize(ref Projectile.perIDStaticNPCImmunity, ProjectileCount);
-
-		for (int i = 0; i < ProjectileCount; i++) {
-			Projectile.perIDStaticNPCImmunity[i] = new uint[200];
-		}
+		// TML: 1.4.5.7 made this a rectangular array, which can't be resized in place.
+		Projectile.perIDStaticNPCImmunity = new uint[ProjectileCount, InitData.MaxNPCs];
 	}
 
 	internal static void FinishSetup()

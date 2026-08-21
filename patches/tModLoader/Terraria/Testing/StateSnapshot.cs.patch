@@ -1,0 +1,102 @@
+--- src/TerrariaNetCore/Terraria/Testing/StateSnapshot.cs
++++ src/tModLoader/Terraria/Testing/StateSnapshot.cs
+@@ -1,3 +_,4 @@
++using System;
+ using System.Collections.Generic;
+ using System.IO;
+ using Microsoft.Xna.Framework;
+@@ -44,69 +_,32 @@
+ 
+ 	private sealed class TilesComponent : StateSnapshotDefinition.Component
+ 	{
+-		private struct TileData
+-		{
+-			private long a;
+-			private long b;
+-		}
+-
+ 		public TilesComponent()
+ 			: base("Main.tile")
+ 		{
+ 		}
+ 
++		// TML: Vanilla copies raw 16 byte Tile structs straight out of the Main.tile array. tModLoader stores tile
++		// data in one array per ITileData type (see Tilemap.GetData), so those arrays are snapshotted instead.
+ 		public override object Backup(DeepCloneContext ctx)
+ 		{
+-			TileData[] data = new TileData[Main.maxTilesX * Main.maxTilesY];
+-			FastParallel.For(0, Main.maxTilesX, delegate (int x0, int x1, object _) {
+-				BackupRange(x0, x1, data);
+-			});
+-
+-			return data;
+-		}
+-
+-		private unsafe static void BackupRange(int x0, int x1, TileData[] data)
+-		{
+-			int maxTilesY = Main.maxTilesY;
+-			Tile[,] tile = Main.tile;
+-			fixed (TileData* ptr = &data[x0 * maxTilesY]) {
+-				TileData* ptr2 = ptr;
+-				for (int i = x0; i < x1; i++) {
+-					for (int j = 0; j < maxTilesY; j++) {
+-						fixed (ushort* ptr3 = &tile[i, j].type) {
+-							TileData* num = ptr2;
+-							ptr2 = num + 1;
+-							*num = *(TileData*)ptr3;
+-						}
+-					}
+-				}
+-			}
++			return new Array[] {
++				(Array)Main.tile.GetData<TileTypeData>().Clone(),
++				(Array)Main.tile.GetData<WallTypeData>().Clone(),
++				(Array)Main.tile.GetData<LiquidData>().Clone(),
++				(Array)Main.tile.GetData<TileWallWireStateData>().Clone(),
++				(Array)Main.tile.GetData<TileWallBrightnessInvisibilityData>().Clone()
++			};
+ 		}
+ 
+ 		public override void Restore(object clone, DeepCloneContext ctx)
+ 		{
+-			TileData[] data = (TileData[])clone;
+-			FastParallel.For(0, Main.maxTilesX, delegate (int x0, int x1, object _) {
+-				RestoreRange(x0, x1, data);
+-			});
+-		}
+-
+-		private unsafe static void RestoreRange(int x0, int x1, TileData[] data)
+-		{
+-			int maxTilesY = Main.maxTilesY;
+-			Tile[,] tile = Main.tile;
+-			fixed (TileData* ptr = &data[x0 * maxTilesY]) {
+-				TileData* ptr2 = ptr;
+-				for (int i = x0; i < x1; i++) {
+-					for (int j = 0; j < maxTilesY; j++) {
+-						fixed (ushort* ptr3 = &tile[i, j].type) {
+-							TileData* num = ptr2;
+-							ptr2 = num + 1;
+-							*(TileData*)ptr3 = *num;
+-						}
+-					}
+-				}
+-			}
++			Array[] data = (Array[])clone;
++			data[0].CopyTo(Main.tile.GetData<TileTypeData>(), 0);
++			data[1].CopyTo(Main.tile.GetData<WallTypeData>(), 0);
++			data[2].CopyTo(Main.tile.GetData<LiquidData>(), 0);
++			data[3].CopyTo(Main.tile.GetData<TileWallWireStateData>(), 0);
++			data[4].CopyTo(Main.tile.GetData<TileWallBrightnessInvisibilityData>(), 0);
+ 		}
+ 	}
+ 
+@@ -122,7 +_,8 @@
+ 		DeepCloning.AddImmutableType<LocalizedText>();
+ 		DeepCloning.AddImmutableType<NetworkText>();
+ 		DeepCloning.AddImmutableType<ItemTooltip>();
++		// TML: LegacySoundStyle was replaced by SoundStyle.
+-		DeepCloning.AddImmutableType<LegacySoundStyle>();
++		DeepCloning.AddImmutableType<SoundStyle>();
+ 		DeepCloning.AddImmutableType<ShaderData>();
+ 		DeepCloning.AddImmutableType(typeof(Asset<>));
+ 		BackupRestoreHelper<Player>.Register(new ActiveCloneHelper<Player>((Player p) => p.active, delegate (Player p) {

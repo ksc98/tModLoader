@@ -1,0 +1,11 @@
+--- src/TerrariaNetCore/Terraria/GameContent/Items/WhipTagEffect_ElectricEel.cs
++++ src/tModLoader/Terraria/GameContent/Items/WhipTagEffect_ElectricEel.cs
+@@ -23,7 +_,7 @@
+ 		int num5 = 450;
+ 		int num6 = 20;
+ 		if (0 == 1)
+-			num6 = (int)((float)num6 * owner.minionDamage);
++			num6 = (int)owner.minionDamage.ApplyTo(num6);
+ 
+ 		for (int i = 0; i < Main.maxNPCs; i++) {
+ 			if (num >= num2)

@@ -14,6 +14,12 @@ namespace Terraria;
 
 public partial class Player : IEntityWithInstances<ModPlayer>
 {
+	/// <summary>
+	/// The set bonus description shown on worn armor tooltips. Set this from <see cref="ModLoader.ModItem.UpdateArmorSet"/>.
+	/// <para/> Vanilla armor sets register an <see cref="DataStructures.ArmorSetBonus"/> instead; this is the modded equivalent and is cleared every <see cref="ResetEffects"/>.
+	/// </summary>
+	public string setBonus = "";
+
 	internal IList<string> usedMods;
 	/// <summary> Contains error messages from ModPlayer.SaveData from a previous player save retrieved from the .tplr. Shown when entering a world and on player select menu. Maps ModSystem.FullName.MethodName to exception string.</summary>
 	internal Dictionary<string, string> ModSaveErrors { get; set; } = new Dictionary<string, string>();
